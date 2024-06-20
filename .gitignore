@@ -1,0 +1,6 @@
+app/secure-connect-video-membership-proeject.zip
+app/video_membership_proeject-token.json
+env
+__pycache__/
+app/.gitignore
+.env
