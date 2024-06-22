@@ -1,12 +1,14 @@
+import json
 import pathlib
 
 from cassandra.cqlengine.management import sync_table  # type: ignore
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
 
-from . import db
+from . import db, utils
+from .shortcut import render
 from .users.model import User
+from .users.schemas import UserLogInSchema, UserSignupSchema
 
 # Initialize the client
 
@@ -14,13 +16,6 @@ main_app = FastAPI()
 
 
 DB_SESSION = None
-
-
-BASE_DIR = pathlib.Path(__file__).resolve().parent
-
-TEMPLATE_DIR = BASE_DIR / "templates"
-
-templates = Jinja2Templates(directory=str(TEMPLATE_DIR))
 
 
 # DB on startup
@@ -33,36 +28,47 @@ def on_startup():
 
 @main_app.get("/", response_class=HTMLResponse)
 def homepage(request: Request):
-    return templates.TemplateResponse(
-        "home.html", {"request": request, "abc": 123}
-    )
+    return render(request, "home.html", {"abc": 123})
 
 
 @main_app.get("/login", response_class=HTMLResponse)
 def login(request: Request):
-    return templates.TemplateResponse("auth/login.html", {"request": request})
+    return render(request, "auth/login.html", {})
 
 
 @main_app.post("/login", response_class=HTMLResponse)
 def login_post(
     request: Request, email: str = Form(...), password: str = Form(...)
 ):
-    print(email, password)
-    return templates.TemplateResponse("auth/login.html", {"request": request})
+    raw_data = {"email": email, "password": password}
+    data, errors = utils.valid_schema_data_or_error(raw_data, UserLogInSchema)
+
+    if len(errors) > 0:
+        return render(request, "auth/login.html", raw_data, status_code=400)
+    return render(request, "auth/login.html", {"data": data, "errors": errors})
 
 
 @main_app.get("/signup", response_class=HTMLResponse)
 def signup(request: Request):
-    return templates.TemplateResponse("auth/signup.html", {"request": request})
+    return render(request, "auth/signup.html", {})
 
 
 @main_app.post("/signup", response_class=HTMLResponse)
 def signup_post(
-    request: Request, email: str = Form(...), password: str = Form(...),
-    password_confirm: str = Form(...)
+    request: Request,
+    email: str = Form(...),
+    password: str = Form(...),
+    password_confirm: str = Form(...),
 ):
-    print(email, password)
-    return templates.TemplateResponse("auth/signup.html", {"request": request})
+    raw_data = {
+        "email": email,
+        "password": password,
+        "confirm_password": password_confirm,
+    }
+    data, errors = utils.valid_schema_data_or_error(raw_data, UserSignupSchema)
+    if len(errors) > 0:
+        return render(request, "auth/login.html", raw_data, status_code=400)
+    return render(request, "auth/signup.html", {"data": data, "errors": error})
 
 
 @main_app.get("/users")

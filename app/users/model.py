@@ -11,7 +11,7 @@ settings = get_settings()
 
 
 class User(Model):
-    __keyspace__ = "video_membership_app"
+    __keyspace__ = settings.astradb_keyspace
     email = columns.Text(primary_key=True)
     user_id = columns.UUID(primary_key=True, default=uuid.uuid1)
     password = columns.Text()
