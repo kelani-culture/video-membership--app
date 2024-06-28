@@ -1,11 +1,9 @@
 import json
 from pathlib import Path
 
-from cassandra.auth import PlainTextAuthProvider # type: ignore
-from cassandra.cluster import Cluster # type: ignore
-from cassandra.cqlengine import connection # type: ignore
-
-
+from cassandra.auth import PlainTextAuthProvider  # type: ignore
+from cassandra.cluster import Cluster  # type: ignore
+from cassandra.cqlengine import connection  # type: ignore
 
 BASE_DIR = Path(__file__).resolve().parent
 

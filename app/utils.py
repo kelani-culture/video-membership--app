@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from pydantic import error_wrappers
 from pydantic_core import ValidationError
 from typing import List, Any
+from .users.auth import authenticate
 
 def valid_schema_data_or_error(raw_data: dict, SchemaModel: BaseModel):
     data = {}
@@ -11,7 +12,8 @@ def valid_schema_data_or_error(raw_data: dict, SchemaModel: BaseModel):
 
     try:
         cleaned_data = SchemaModel(**raw_data)
-        data = cleaned_data.model_dump()
+        data = {'session_id':cleaned_data.model_dump().get('session_id')}
+
     except ValidationError as e:
         error_str = e.json()
 

@@ -7,14 +7,14 @@ class SecurePassword:
         return ph.hash(pw_raw)
 
     def confirm_password(self, hash_pwd, pw_raw):
-        ph = PasswordHasher
+        ph = PasswordHasher()
         verified = False
         msg = ''
 
         try:
             verified = ph.verify(hash_pwd, pw_raw) 
-        except VerifyMismatchError:
-            verify = False
+        except VerifyMismatchError as v:
+            verified = False
             msg = 'Invalid password.'
         except Exception as e:
             verified = False

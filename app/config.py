@@ -16,8 +16,8 @@ class DatabaseSettings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8"
     )
-    astradb_keyspace: Optional[str] = Field(..., alias='ASTRADB_KEYSPACE')
-    secret_key: Optional[str] = Field(..., alias='SECRET_KEY')
+    astradb_keyspace: Optional[str] = ''
+    secret_key: Optional[str] = ''
 
 
 @lru_cache

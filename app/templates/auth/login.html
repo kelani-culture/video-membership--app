@@ -4,6 +4,9 @@
 {% block content %}
 <h1>Login</h1>
 {% include 'snippets/form_errors.html' %}
+{% if logged_in %}
+    <p>You are logged In</p>
+{% else %}
 <form method="post">
     <div>
         <label for="email">Email</label>
@@ -16,4 +19,5 @@
     </div>
     <button type="submit">Login</button>
 </form>
+{% endif %}
 {% endblock %}
