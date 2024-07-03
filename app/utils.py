@@ -12,7 +12,7 @@ def valid_schema_data_or_error(raw_data: dict, SchemaModel: BaseModel):
 
     try:
         cleaned_data = SchemaModel(**raw_data)
-        data = {'session_id':cleaned_data.model_dump().get('session_id')}
+        data = cleaned_data
 
     except ValidationError as e:
         error_str = e.json()

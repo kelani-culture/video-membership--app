@@ -32,15 +32,11 @@ def login(user_obj, expires=5):
 
 
 def verify_user_token(token):
-    verify = False
     data = {}
     try:
         data = jwt.decode(token, settings.secret_key, algorithms=[ALGORITHM])
-        verify = True
     except (ExpiredSignatureError, JWTError):
-        verify = False
         pass
-
     if "user_id" not in data:
         return None
-    return data, verify
+    return data

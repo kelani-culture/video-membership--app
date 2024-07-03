@@ -9,10 +9,7 @@ from .exceptions import LoginRequiredException
 def login_required(func):
     @wraps(func)
     def wrapper(request: Request, *args, **kwargs):
-        session_id = request.cookies.get("session_id")
-
-        user_session = verify_user_token(session_id)
-        if not user_session:
+        if not request.user.is_authenticated:
             raise LoginRequiredException(status_code=401)
         return func(request, *args, **kwargs)
 
