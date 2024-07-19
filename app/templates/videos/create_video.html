@@ -6,6 +6,10 @@
 {% include 'snippets/form_errors.html' %}
 <form method="post">
     <div>
+        <label for="title">Title</label>
+        <input type="text" name="title" id="title" placeholder="Your title" values="{% if title %} {{ title }} {% endif %}">
+    </div>
+    <div>
         <label for="url">Youtube Link</label>
         <input type="text" name="url" id="url" placeholder="https://www.youtube.com/watch?v=KQ-u4RcFLBY&t=1502s&ab_channel=CodingEntrepreneurs" values="{% if url %} {{ url }} {% endif %}">
     </div>

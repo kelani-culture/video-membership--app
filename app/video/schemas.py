@@ -11,6 +11,7 @@ class VideoCreateSchema(BaseModel):
     url: str  # user generated
     user_id: uuid.UUID  # request.session user_id
     video_obj: Optional[dict] = None
+    title: str
 
     @field_validator("url")
     @classmethod
@@ -27,6 +28,7 @@ class VideoCreateSchema(BaseModel):
         url = self.url
         user_id = self.user_id
         video_obj = None
+        title = self.title
         try:
             video_obj = Video.add_video(url, user_id=user_id)
         except InvalidUserIDException:
@@ -41,5 +43,10 @@ class VideoCreateSchema(BaseModel):
             raise ValueError("There's a problem with your account")
         if not isinstance(video_obj, Video):
             raise ValueError("There's a problem with your account")
+
         self.video_obj = video_obj.as_data()
+
+        if title is not None:
+           video_obj.title = title
+           video_obj.save() 
         return self.video_obj

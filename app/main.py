@@ -80,7 +80,8 @@ def login_post(
     if len(errors) > 0:
         return render(request, "auth/login.html", raw_data, status_code=400)
 
-    return redirect("/account", cookies=data.session_id)
+    cookie = {'session_id': data.session_id}
+    return redirect("/account", cookies=cookie)
 
 
 @main_app.get("/signup", response_class=HTMLResponse)
