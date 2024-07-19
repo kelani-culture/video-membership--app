@@ -8,6 +8,8 @@ from app.config import get_settings
 from .extractor import extract_video_id
 from app.users.exceptions import InvalidUserIDException
 from .exceptions import InvalidVideoURLException, VideoAddedException
+
+
 settings = get_settings()
 
 
@@ -46,3 +48,10 @@ class Video(Model):
     @property
     def path(self):
         return f"/videos/{self.host_id}"
+
+    def render(self):
+        from app.shortcut import templates
+        basename = self.host_service
+        template_name = f"videos/renderers/{basename}.html"
+        context = {"host_id": self.host_id}
+        return templates.get_template(template_name).render(context)

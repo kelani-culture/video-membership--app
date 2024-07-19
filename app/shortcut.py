@@ -5,7 +5,6 @@ from fastapi.requests import Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
-from .video.models import Video
 
 from .config import BASE_DIR, TEMPLATE_DIR
 

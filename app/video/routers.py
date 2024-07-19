@@ -17,12 +17,6 @@ def video_list_view(request: Request):
     context = {"object_list": q}
     return render(request, "videos/list.html", context=context)
 
-
-@router.get("/detail")
-def video_detail_view(request: Request):
-    return render(request, "videos/detail.html", {})
-
-
 @router.get("/{host_id}")
 def video_detailed_view(request: Request, host_id: str):
     obj = get_object_or_404(Video, host_id=host_id)

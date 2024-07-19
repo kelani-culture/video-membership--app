@@ -3,5 +3,6 @@
 
 {% block content %}
 {{ host_id }} <br>
-{{ object }}
+
+{{ object.render() | safe }}
 {% endblock %}
