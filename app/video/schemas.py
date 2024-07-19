@@ -30,7 +30,7 @@ class VideoCreateSchema(BaseModel):
         video_obj = None
         title = self.title
         try:
-            video_obj = Video.add_video(url, user_id=user_id)
+            video_obj = Video.add_video(url, user_id=user_id, title=title)
         except InvalidUserIDException:
             raise ValueError("Invalid User ID provided")
         except InvalidVideoURLException:
@@ -46,7 +46,4 @@ class VideoCreateSchema(BaseModel):
 
         self.video_obj = video_obj.as_data()
 
-        if title is not None:
-           video_obj.title = title
-           video_obj.save() 
         return self.video_obj

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Form, Request
 from fastapi.responses import HTMLResponse
 
 from app import utils
-from app.shortcut import redirect, render
+from app.shortcut import get_object_or_404, redirect, render
 from app.users.decorators import login_required
 
 from .models import Video
@@ -23,6 +23,12 @@ def video_detail_view(request: Request):
     return render(request, "videos/detail.html", {})
 
 
+@router.get("/{host_id}")
+def video_detailed_view(request: Request, host_id: str):
+    obj = get_object_or_404(Video, host_id=host_id)
+    context = {"host_id": host_id, "object": obj}
+    return render(request, "videos/detail.html", context=context)
+
 @router.get("/create", response_class=HTMLResponse)
 @login_required
 def video_get_create_view(request: Request):
@@ -35,6 +41,7 @@ def video_post_create_view(
     request: Request, url: str = Form(...), title: str = Form(...)
 ):
     raw_data = {"title": title, "url": url, "user_id": request.user.username}
+    print(raw_data)
     data, errors = utils.valid_schema_data_or_error(
         raw_data, VideoCreateSchema
     )

@@ -1,8 +1,11 @@
 from typing import Any, Dict
 
+from cassandra.cqlengine.query import DoesNotExist, MultipleObjectsReturned
 from fastapi.requests import Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from starlette.exceptions import HTTPException as StarletteHTTPException
+from .video.models import Video
 
 from .config import BASE_DIR, TEMPLATE_DIR
 
@@ -15,8 +18,8 @@ def redirect(path, cookies: dict = {}, remove_session=False):
         response.set_cookie(key=k, value=v, httponly=True)
 
     if remove_session:
-        response.set_cookie(key='session_ended', value=1)
-        response.delete_cookie('session_id')
+        response.set_cookie(key="session_ended", value=1)
+        response.delete_cookie("session_id")
     return response
 
 
@@ -40,3 +43,18 @@ def render(
     # for key in request.cookies.keys():
     #     response.delete_cookie(key)
     return response
+
+
+def get_object_or_404(KlassName, **kwargs):
+    obj = None
+    try:
+        obj = KlassName.objects.get(**kwargs)
+    except DoesNotExist:
+        raise StarletteHTTPException(status_code=404)
+    except MultipleObjectsReturned:
+        obj = KlassName.objects.allow_filter().filter(**kwargs)
+        return obj.first()
+        # StarletteHTTPException(status_code=400)
+    except:
+        raise StarletteHTTPException(status_code=500)
+    return obj
